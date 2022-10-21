@@ -2,49 +2,81 @@ package com.java.bzl;
 import java.util.*;
 public class EmpWage {
 
-   private static int PartTime=1;
-private static final int Wage_Per_Hour = 20; 
-private static int fullDayHour =2;
-   private static float dailywage, monthlywage;
-   private static int empPerDay, fullDayHour1, workingHoursPerMonth, day; 
+	private static final int PART_TIME = 1, FULL_TIME = 2;
+
+	private static float wagePerHour, dailyWage, monthlyWage;
+	private static int empPerDay, fullDayHour, workingHoursPerMonth, day, countCompany; 
 	private static Random random = new Random();
-	private static void findEmpWage() {
+	private static Scanner scanner = new Scanner(System.in);
+	private static int perCompanyHours, perCompanyDays;
+	
+	private static void findEmpWage(float wagePerHour, int totalWorkingDays, int totalWorkingHours) {
 		workingHoursPerMonth = 0;
-		monthlywage = 0;
+		monthlyWage = 0;
 		day = 0;
 		System.out.println("\nWelcome to Employee Wage Computation Program.");
-		while (workingHoursPerMonth <= 100 && day != 20) {
+		
+		while (workingHoursPerMonth != totalWorkingHours && day != totalWorkingDays) {
 			day++;
-			int attendance = random.nextInt(2);
-			PartTime = 1 + random.nextInt(2);
+			empPerDay = random.nextInt(3);
 
-			switch (attendance) {
-			case 1:
-				System.out.println("Employee is present!");
-				switch (PartTime) {
-				case 1:
-					System.out.println("Employee is part time.");
-					fullDayHour = 4;
-					break;
-				case 2:
-					System.out.println("Employee is full time.");
-					fullDayHour = 8;
-				}
+			switch (empPerDay) {
+
+			case PART_TIME:
+				fullDayHour = 4;
+				System.out.println("Part time employee is present.");
 				break;
-			case 0:
-				System.out.println("Employee is absent.");
 
+			case FULL_TIME:
+				fullDayHour = 8;
+				System.out.println("Full time employee is present.");
+				break;
+
+			default:
+				fullDayHour = 0;
+				System.out.println("Employee is absent.");
 			}
+
 			workingHoursPerMonth += fullDayHour;
-			dailywage = Wage_Per_Hour * fullDayHour;
-			monthlywage += dailywage;
-			System.out.println("Day " + day + " wage of employee: " + dailywage + "\n");
+			dailyWage = wagePerHour * fullDayHour;
+			monthlyWage += dailyWage;
+			
+			System.out.println("Day " + day + " wage of employee: " + dailyWage + "\n");
 		}
-		System.out.println("\nMonth wage of employee: " + monthlywage);
+
+		System.out.println("\nWorking hours per month: " + workingHoursPerMonth);
+		System.out.println("\nMonthly wage of employee: " + monthlyWage);
 		System.out.println("\nProgram runs total: " + day + " times.");
-}
-	public static void main(String[]args){
-		findEmpWage();
+	}
+
+	private static void takeCompanyDetails() {
+		countCompany++;
+		System.out.println("Enter company " + countCompany + " details: ");
+		System.out.println("Enter per hour wage for company:");
+		wagePerHour = scanner.nextFloat();
+		System.out.println("Enter total working days per month for company: ");
+		perCompanyDays = scanner.nextInt();
+		System.out.println("Enter total working hours per month for company: ");
+		perCompanyHours = scanner.nextInt();
+	}
+	
+	public static void main(String[] args) {
+		System.out.println("Enter number for how many companies you wan't to find employee wage: ");
+		int num = scanner.nextInt();
+		float[] companiesWages = new float[num];
+		int[] companiesDays = new int[num];
+		int[] companiesHours = new int[num];
+		
+		for (int i = 0; i < num; i++) {
+			takeCompanyDetails();
+			companiesWages[i] = wagePerHour;
+			companiesDays[i] = perCompanyDays;
+			companiesHours[i] = perCompanyHours;
+		}
+		
+		for (int i = 0; i < num; i++) {
+			findEmpWage(companiesWages[i], companiesDays[i], companiesHours[i]);
+		}
 	}
 
 }
